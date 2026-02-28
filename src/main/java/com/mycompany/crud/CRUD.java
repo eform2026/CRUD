@@ -13,7 +13,20 @@ public class CRUD {
 
         Scanner scanner = new Scanner(System.in);
 
-         catch (SQLException e) {
+        try {
+
+            // Conexión a la base de datos
+            String url = "jdbc:mysql://localhost:3306/e-form";
+            String usuario = "root";
+            String contraseña = "cielo";
+
+            Connection conexion = DriverManager.getConnection(url, usuario, contraseña);
+
+            System.out.println("Eliminar Usuario");
+            System.out.print("Ingrese el idUsuario: ");
+            int idUsuarios = scanner.nextInt();
+
+        catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
 
