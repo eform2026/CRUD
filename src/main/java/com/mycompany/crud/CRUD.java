@@ -25,7 +25,25 @@ public class CRUD {
             System.out.println("Eliminar Usuario");
             System.out.print("Ingrese el idUsuario: ");
             int idUsuarios = scanner.nextInt();
+            
+            // Sentencia DELETE
+            String sql = "DELETE FROM usuarios WHERE idUsuario = ?";
+            PreparedStatement consulta = conexion.prepareStatement(sql);
 
+            consulta.setInt(1, idUsuarios);
+
+            int filas = consulta.executeUpdate();
+
+            if (filas > 0) {
+                System.out.println("Usuario eliminado");
+            } else {
+                System.out.println("No existe un usuario con ese id");
+            }
+
+            consulta.close();
+            conexion.close();
+
+        }
         catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
