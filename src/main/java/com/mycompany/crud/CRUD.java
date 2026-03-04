@@ -41,9 +41,45 @@ public class CRUD {
         
     }
     
+
     public static void updateUser(){
         
     }
+
+    public static void updateUser(Connection conexion) throws SQLException {
+
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.println("Actualizar Usuario");
+    System.out.print("Ingrese el idUsuario que desea actualizar: ");
+    int idUsuario = scanner.nextInt();
+    scanner.nextLine(); // limpiar buffer
+
+    System.out.print("Nuevo nombre: ");
+    String nombre = scanner.nextLine();
+
+    System.out.print("Nuevo correo: ");
+    String correo = scanner.nextLine();
+
+    // Sentencia UPDATE
+    String sql = "UPDATE usuarios SET nombre = ?, correo = ? WHERE idUsuario = ?";
+
+    try (PreparedStatement consulta = conexion.prepareStatement(sql)) {
+
+        consulta.setString(1, nombre);
+        consulta.setString(2, correo);
+        consulta.setInt(3, idUsuario);
+
+        int filas = consulta.executeUpdate();
+
+        if (filas > 0) {
+            System.out.println("Usuario actualizado correctamente");
+        } else {
+            System.out.println("No existe un usuario con ese id");
+        }
+    }
+}
+
     
     public static void deleteUser(Connection conexion) throws SQLException{
         Scanner scanner = new Scanner(System.in);
