@@ -42,9 +42,7 @@ public class CRUD {
     }
     
 
-    public static void updateUser(){
-        
-    }
+   
 
     public static void updateUser(Connection conexion) throws SQLException {
 
