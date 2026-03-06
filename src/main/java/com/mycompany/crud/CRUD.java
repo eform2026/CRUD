@@ -6,8 +6,13 @@ package com.mycompany.crud;
 
 import java.sql.*;
 import java.util.Scanner;
+// agregue las librerias para el metodo del hash MD5
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class CRUD {
+    
+    
 
     public static void main(String[] args) {
 
