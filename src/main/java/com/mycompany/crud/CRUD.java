@@ -13,10 +13,24 @@ import java.security.NoSuchAlgorithmException;
 public class CRUD {
     
     
+    // metodo para el hash MD5
+     public static String convertirMD5(String texto) {
+    try {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] array = md.digest(texto.getBytes());
+        StringBuilder sb = new StringBuilder();
+        for (byte b : array) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    } catch (NoSuchAlgorithmException e) {
+        System.out.println("Error al cifrar: " + e.getMessage());
+        return null;
+    }
+}
 
     public static void main(String[] args) {
 
-        
 
         try {
 
