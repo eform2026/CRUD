@@ -23,6 +23,7 @@ public class CRUD {
             Connection conexion = DriverManager.getConnection(url, usuario, contraseña);
 
             deleteUser(conexion);
+            updateUser(conexion);
             
 
         }
