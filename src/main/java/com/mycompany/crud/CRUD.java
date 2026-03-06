@@ -16,11 +16,15 @@ public class CRUD {
     // metodo para el hash MD5
      public static String convertirMD5(String texto) {
     try {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] array = md.digest(texto.getBytes());
-        StringBuilder sb = new StringBuilder();
+        MessageDigest md = MessageDigest.getInstance("MD5"); // se encarga de crear resumenes la "clase MessageDigest" y se indica que se utilice el algoridmo de MD5 o hashes
+        byte[] array = md.digest(texto.getBytes()); // se convierte el la contraseña "ya sea textos con numeros y simbolos o solo numeros y simbolos " a un arreglo de bytes
+        //en md.digest(..) es donde el algoritmo procesa los bytes y devuelve un arreglo de bytes que representan el hash (cundo de hace el hash ya no se puede revertir)
+        //son datos "crudos" que no se pueden leer ni guardar facilmente en una base de datos 
+        StringBuilder sb = new StringBuilder(); 
         for (byte b : array) {
-            sb.append(String.format("%02x", b));
+            // por eso se usa el StringBuilder y un bucle 
+            sb.append(String.format("%02x", b)); // en esta parte la clave conviete los bytes en un numero hexadecimal de 2 digitos ya sea del 00 al ff
+       // sb.append) Va pegando esos pares de caracteres uno tras otro hasta completar los 32 caracteres típicos de un MD5.
         }
         return sb.toString();
     } catch (NoSuchAlgorithmException e) {
