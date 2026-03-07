@@ -45,13 +45,13 @@ public class CRUD {
             int opcion;
 
             while (!salir) {
-                System.out.println("\n--- MENÚ DE GESTIÓN DE USUARIOS ---");
+                System.out.println("\n--- MENU DE GESTION DE USUARIOS ---");
                 System.out.println("1. Crear usuario");
                 System.out.println("2. Ver usuarios");
                 System.out.println("3. Actualizar usuario");
                 System.out.println("4. Eliminar usuario");
                 System.out.println("5. Salir");
-                System.out.print("Seleccione una opción: ");
+                System.out.print("Seleccione una opcin: ");
                 
                 opcion = sn.nextInt();
 
