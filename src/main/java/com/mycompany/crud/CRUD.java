@@ -83,21 +83,21 @@ public class CRUD {
         }
     }
 
-    // --- ESPACIOS PARA COMPAÑEROS ---
+    
 
     public static void createUser() {
-        // AQUÍ VA EL CÓDIGO DEL COMPAÑERO PARA CREAR
+        
     }
 
     public static void readUser() {
-        // AQUÍ VA EL CÓDIGO DEL COMPAÑERO PARA LEER
+        
     }
 
     public static void validarSiHayDatos() {
-        // AQUÍ VA EL CÓDIGO DE LA COMPAÑERA PARA VALIDAR SI HAY ALGO EN LA BASE DE DATOS
+       
     }
 
-    // --- MÉTODOS YA PROGRAMADOS ---
+    
 
     public static void updateUser(Connection conexion) throws SQLException {
         Scanner scanner = new Scanner(System.in);
