@@ -85,10 +85,6 @@ public class CRUD {
 
     
 
-    public static void createUser() {
-        
-    }
-
     public static void readUser() {
         
     }
