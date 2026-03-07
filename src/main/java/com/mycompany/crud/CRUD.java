@@ -85,9 +85,7 @@ public class CRUD {
 
     
 
-    public static void readUser() {
-        
-    }
+
 
     public static void validarSiHayDatos() {
        
