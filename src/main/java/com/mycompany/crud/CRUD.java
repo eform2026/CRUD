@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class CRUD {
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
 
@@ -23,6 +24,9 @@ public class CRUD {
             Connection conexion = DriverManager.getConnection(url, usuario, contraseña);
 
             deleteUser(conexion);
+
+            updateUser(conexion);
+
             
 
         }
@@ -32,15 +36,56 @@ public class CRUD {
 
         //scanner.close();
     }
+ 
+    public static void createUser(Connection conexion) throws SQLException {
+    System.out.println("=== CREAR USUARIO ===");
+    System.out.print("idUsuario (número): ");
     
-    public static void createUser(){
-        
+    int idUsuario;
+    while (true) {
+        try {
+            idUsuario = Integer.parseInt(scanner.nextLine());
+            break;
+        } catch (NumberFormatException e) {
+            System.out.print("Formato incorrecto. Use solo números sin letras ni símbolos");
+        }
     }
     
+    System.out.print("Nombre: ");
+    String nombre = scanner.nextLine();
+    System.out.print("Correo: ");
+    String correo = scanner.nextLine();
+    System.out.print("Contraseña: ");
+    String contrasena = scanner.nextLine();
+    System.out.print("Rol: ");
+    String rol = scanner.nextLine();
+
+    String sql = "INSERT INTO usuarios (idUsuario, nombre, correo, contrasena, rol) VALUES (?, ?, ?, ?, ?)";
+    try (PreparedStatement consulta = conexion.prepareStatement(sql)) {
+        consulta.setInt(1, idUsuario);
+        consulta.setString(2, nombre);
+        consulta.setString(3, correo);
+        consulta.setString(4, contrasena);
+        consulta.setString(5, rol);
+        
+        int filas = consulta.executeUpdate();
+        if (filas > 0) {
+            System.out.println("Usuario CREADO correctamente");
+            System.out.println("Datos: " + idUsuario + " - " + nombre);
+        } else {
+            System.out.println("Error al crear usuario");
+        }
+    }
+}
+
+    
+
     public static void readUser(){
         
     }
     
+
+
 
 
     public static void updateUser(Connection conexion) throws SQLException {
