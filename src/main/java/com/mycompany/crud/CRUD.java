@@ -196,9 +196,25 @@ public class CRUD {
 
     }
 
-    public static void validarSiHayDatos() {
+    // ese metodo es para verificar si hay datos en la tabla usuarios
+public static void validarSiHayDatos(Connection conexion) throws SQLException {
 
+    String sql = "SELECT COUNT(*) FROM usuarios";
+
+    try (PreparedStatement consulta = conexion.prepareStatement(sql);
+         ResultSet resultado = consulta.executeQuery()) {
+
+        if (resultado.next()) {
+            int total = resultado.getInt(1);
+
+            if (total > 0) {
+                System.out.println("La tabla usuarios tiene registros: " + total);
+            } else {
+                System.out.println("La tabla usuarios esta vacia.");
+            }
+        }
     }
+}
 
     public static void updateUser(Connection conexion) throws SQLException {
 
