@@ -37,9 +37,9 @@ public class CRUD {
     public static void main(String[] args) {
 
         // conexión a la base de datos que nos proporciono el profe jheyson 
-        String url = "jdbc:mysql://formacionsena.c9bfqfswwhqk.us-east-1.rds.amazonaws.com:3306/eform";
+        String url = "jdbc:mysql://127.0.0.1:3306/e-form";
         String usuario = "root";
-        String contraseña = "8Fg2Rc7hHChxibkbqjSI";
+        String contraseña = "mogadex123";
 
         Connection conexion = null;
 
@@ -178,7 +178,7 @@ public class CRUD {
             consulta.setInt(1, idUsuario);
             consulta.setString(2, nombre);
             consulta.setString(3, correo);
-            consulta.setString(4, contrasena);
+            consulta.setString(4, convertirMD5(contrasena));
             consulta.setString(5, rol);
 
             int filas = consulta.executeUpdate();
