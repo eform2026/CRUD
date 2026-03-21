@@ -2,6 +2,7 @@ package com.mycompany.crud;
 
 import java.sql.*;
 import java.util.Scanner;
+
 // agregue las librerias para el metodo del hash MD5
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,18 +13,18 @@ public class CRUD {
     // metodo para el hash MD5
     public static String convertirMD5(String texto) {
         try {
-            MessageDigest md = MessageDigest.getInstance("MD5"); 
             // se encarga de crear resumenes la "clase MessageDigest" y se indica que se utilice el algoridmo de MD5 o hashes
+            MessageDigest md = MessageDigest.getInstance("MD5"); 
 
-            byte[] array = md.digest(texto.getBytes()); 
             // se convierte la contraseña a un arreglo de bytes
+            byte[] array = md.digest(texto.getBytes()); 
 
+            // por eso se usa el StringBuilder y un bucle
             StringBuilder sb = new StringBuilder(); 
 
             for (byte b : array) {
-                // por eso se usa el StringBuilder y un bucle
-                sb.append(String.format("%02x", b)); 
                 // convierte los bytes en números hexadecimales de 2 dígitos
+                sb.append(String.format("%02x", b)); 
             }
 
             return sb.toString();
@@ -37,7 +38,8 @@ public class CRUD {
     public static void main(String[] args) {
 
         // conexión a la base de datos que nos proporciono el profe jheyson 
-        String url = "jdbc:mysql://127.0.0.1:3306/e-form";
+        // URL de la base de datos en la nube (Amazon RDS)
+       String url = "jdbc:mysql://127.0.0.1:3306/e-form";
         String usuario = "root";
         String contraseña = "mogadex123";
 
@@ -56,10 +58,8 @@ public class CRUD {
         /*
         IMPORTANTE:
         Antes aquí estaban estas dos líneas:
-
         deleteUser(conexion);
         updateUser(conexion);
-
         Se eliminaron porque hacían que el programa pidiera datos
         antes de mostrar el menú, lo que parecía que el menú no funcionaba.
         */
@@ -75,23 +75,18 @@ public class CRUD {
 
             System.out.print("Seleccione una opcion: ");
 
-            opcion = scanner.nextInt();
-
             /*
             IMPORTANTE:
-
             nextInt() NO consume el salto de línea del teclado.
             Si no se limpia el buffer, el siguiente nextLine()
             puede saltarse la entrada del usuario.
-
-            Por eso se agrega esta línea para limpiar el buffer.
+            Por eso se agrega esta línea para limpiar el buffer: scanner.nextLine();
             */
-            scanner.nextLine();
-
             try {
+                opcion = scanner.nextInt();
+                scanner.nextLine(); // limpiar buffer
 
                 switch (opcion) {
-
                     case 1:
                         if (conexion != null) {
                             createUser(conexion);
@@ -101,7 +96,11 @@ public class CRUD {
                         break;
 
                     case 2:
-                        readUser();
+                        if (conexion != null) {
+                            readUser(conexion); // ✅ Llamada corregida
+                        } else {
+                            System.out.println("No hay conexión a la base de datos.");
+                        }
                         break;
 
                     case 3:
@@ -129,8 +128,9 @@ public class CRUD {
                         System.out.println("Opción no válida.");
                 }
 
-            } catch (SQLException e) {
-                System.out.println("Error en la operación: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Error: Ingrese un número válido.");
+                scanner.nextLine(); // Limpiar en caso de error de letra
             }
         }
 
@@ -178,7 +178,8 @@ public class CRUD {
             consulta.setInt(1, idUsuario);
             consulta.setString(2, nombre);
             consulta.setString(3, correo);
-            consulta.setString(4, convertirMD5(contrasena));
+            // Se aplica el método convertirMD5 a la contraseña
+            consulta.setString(4, convertirMD5(contrasena)); 
             consulta.setString(5, rol);
 
             int filas = consulta.executeUpdate();
@@ -192,29 +193,59 @@ public class CRUD {
         }
     }
 
-    public static void readUser(){
-
-    }
-
     // ese metodo es para verificar si hay datos en la tabla usuarios
-public static void validarSiHayDatos(Connection conexion) throws SQLException {
+    public static void validarSiHayDatos(Connection conexion) throws SQLException {
 
-    String sql = "SELECT COUNT(*) FROM usuarios";
+        String sql = "SELECT COUNT(*) FROM usuarios";
 
-    try (PreparedStatement consulta = conexion.prepareStatement(sql);
-         ResultSet resultado = consulta.executeQuery()) {
+        try (PreparedStatement consulta = conexion.prepareStatement(sql);
+             ResultSet resultado = consulta.executeQuery()) {
 
-        if (resultado.next()) {
-            int total = resultado.getInt(1);
+            if (resultado.next()) {
+                int total = resultado.getInt(1);
 
-            if (total > 0) {
-                System.out.println("La tabla usuarios tiene registros: " + total);
-            } else {
-                System.out.println("La tabla usuarios esta vacia.");
+                if (total > 0) {
+                    System.out.println("La tabla usuarios tiene registros: " + total);
+                } else {
+                    System.out.println("La tabla usuarios esta vacia.");
+                }
             }
         }
     }
-}
+
+    public static void readUser(Connection conexion) throws SQLException {
+
+        System.out.println("\n=== LISTA DE USUARIOS ===");
+
+        String sql = "SELECT * FROM usuarios";
+
+        try (PreparedStatement consulta = conexion.prepareStatement(sql);
+             ResultSet resultado = consulta.executeQuery()) {
+
+            boolean hayDatos = false;
+
+            while (resultado.next()) {
+                hayDatos = true;
+
+                int id = resultado.getInt("idUsuario");
+                String nombre = resultado.getString("nombre");
+                String correo = resultado.getString("correo");
+                String contrasena = resultado.getString("contrasena");
+                String rol = resultado.getString("rol");
+
+                System.out.println("----------------------------");
+                System.out.println("ID: " + id);
+                System.out.println("Nombre: " + nombre);
+                System.out.println("Correo: " + correo);
+                System.out.println("Contraseña: " + contrasena);
+                System.out.println("Rol: " + rol);
+            }
+
+            if (!hayDatos) {
+                System.out.println("No hay usuarios registrados.");
+            }
+        }
+    }
 
     public static void updateUser(Connection conexion) throws SQLException {
 
@@ -256,6 +287,7 @@ public static void validarSiHayDatos(Connection conexion) throws SQLException {
 
         System.out.print("Ingrese el idUsuario: ");
         int idUsuarios = scanner.nextInt();
+        scanner.nextLine(); // limpiar buffer
 
         String sql = "DELETE FROM usuarios WHERE idUsuario = ?";
 
@@ -268,7 +300,7 @@ public static void validarSiHayDatos(Connection conexion) throws SQLException {
             if (filas > 0) {
                 System.out.println("Usuario eliminado correctamente");
             } else {
-                System.out.println("No existe ningun usuario con ese id en la base de datos");
+                System.out.println("No existe ningún usuario con ese id");
             }
         }
     }
